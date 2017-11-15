@@ -1,0 +1,22 @@
+{
+  "name": "storefront-cli",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bamazonCustomer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/grndprxguy/storefront-cli.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/grndprxguy/storefront-cli/issues"
+  },
+  "homepage": "https://github.com/grndprxguy/storefront-cli#readme",
+  "dependencies": {
+    "mysql": "^2.15.0"
+  }
+}
