@@ -8,7 +8,9 @@ var connection = mysql.createConnection({
   password : '',
   database : 'bamazon'
 });
+
 connection.connect();
+
 function showProducts() {
 connection.query('SELECT * FROM products', function(err,data) {
 	if (err) throw err;
@@ -32,45 +34,23 @@ connection.query('SELECT * FROM products WHERE stock_quantity < 10', function(er
 };
 
 function addInventory() {
-	connection.query("SELECT * FROM products", function(err,res, fields) {
-		if (err) throw err;
-		var products = res;
 	inquirer.prompt([
 	{
 		name: "choice",
-		type: "list",
-		message: "Which product ID do you want to add to inventory?",
-		choices: function(value){
-			var productsArray = [];
-			for (i=0; i < products.length; i++) {
-				productsArray.push({
-					id: products[i].item_id,
-					name: products[i].product_name,
-					dept: products[i].department_name,
-					price: products[i].price,
-					qty: products[i].stock_quantity
-				});
-			}return productsArray;
-		} 
-	}]).then(function(answer){
-		for (var i=0; i<products.length; i++) {
-			if (products[i].item_id == answer.choice) {
-				var prodPurchased = products[i];
-			}
-		}
-		inquirer.prompt([
-		{
+		type: "input",
+		message: "Which product ID do you want to add to inventory?"
+	},{
 			name: "count",
 			type: "input",
 			message: "How many of the product would you like to add?"
-		}
-		]).then(function(resp){
-		var newCount = parseInt(products.stock_quantity) + parseInt(resp.count);
-		var addItem = [{
-			stock_quantity: resp.count,
-			item_id: prodPurchased.id
-		}];
-		connection.query("UPDATE products SET ? WHERE ?", addItem, function(err,data) {
+	}
+	]).then(function(answer){
+		connection.query("SELECT stock_quantity FROM products WHERE item_id="+answer.choice, function(err, resp) {
+			if (err) throw err;
+			console.log(resp[0].stock_quantity);
+		var newCount = (parseInt(resp[0].stock_quantity) + parseInt(answer.count));
+		console.log("newCount "+newCount);
+		connection.query("UPDATE products SET stock_quantity=" + newCount + " WHERE item_id="+ answer.choice, function(err,data) {
 			console.log(data);
 			if (err) throw err;
 		console.log("****************************************");
@@ -79,7 +59,6 @@ function addInventory() {
 		showProducts()	;
 		});
 	});
-});
 });
 }
 
