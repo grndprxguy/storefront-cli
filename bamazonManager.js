@@ -32,7 +32,6 @@ connection.query('SELECT * FROM products WHERE stock_quantity < 10', function(er
 };
 
 function addInventory() {
-	showProducts();
 	inquirer.prompt([
 	{
 		name: "item",
@@ -43,12 +42,11 @@ function addInventory() {
 		message: "How many would you like to add?"
 	}
 	]).then(function(resp){
-		connection.connect();
-		connection.query('UPDATE products SET stock_quantity =? WHERE item_id=?',resp.item, resp.count, function(err,data) {
-		if (err) throw err;
+		connection.query("UPDATE products SET stock_quantity=" + resp.item + " WHERE item_id="+ resp.count +"'", function(data) {
+		console.log("****************************************");
 		console.log("Inventory has been updated!");
-		showProducts();
-		userPrompt();	
+		console.log("****************************************");
+		showProducts()	;
 		});
 	});
 };
@@ -79,9 +77,11 @@ function addProduct() {
 			stock_quantity: newProduct.qty},
 			function(err,res) {
 				if (err) throw err;
+				console.log("****************************************");
 				console.log("Your product " + newProduct.name + " has been added!");
+				console.log("****************************************");
+				showProducts();
 			});
-		userPrompt();
 		});
 	};
 
@@ -97,12 +97,9 @@ function userPrompt() {
 	]).then(function(menu){
 		if (menu.choice == "View Products for Sale") {
 			showProducts();
-			userPrompt();
 		} else if (menu.choice == "View Low Inventory") {
 			lowInventory();
-			userPrompt();
 		} else if (menu.choice == "Add to Inventory") {
-			showProducts();
 			addInventory();
 		} else if (menu.choice == "Add New Product") {
 			addProduct();

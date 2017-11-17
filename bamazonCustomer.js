@@ -8,17 +8,17 @@ var connection = mysql.createConnection({
   password : '',
   database : 'bamazon'
 });
-
-function showProducts() {
 connection.connect();
+function showProducts() {
 connection.query('SELECT * FROM products', function(err,data) {
 	if (err) throw err;
 	console.log("****************************************");
 	console.log("Bamazon Inventory")
 	console.table(data);
-	console.log("****************************************")
-	});
+	console.log("****************************************");
 	promptBuy();
+	});
+	
 };
 
 
@@ -69,7 +69,7 @@ function buyAgain() {
 		message: "Would you like to make another purchase?"
 	}]).then(function(resp){
 		if (resp.again) {
-			promptBuy();
+			showProducts();
 		} else {
 			console.log("Thank you for shopping. Have a great day!");
 			connection.end();
