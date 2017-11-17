@@ -47,12 +47,9 @@ function addInventory() {
 	]).then(function(answer){
 		connection.query("SELECT stock_quantity FROM products WHERE item_id="+answer.choice, function(err, resp) {
 			if (err) throw err;
-			console.log(resp[0].stock_quantity);
 		var newCount = (parseInt(resp[0].stock_quantity) + parseInt(answer.count));
-		console.log("newCount "+newCount);
 		connection.query("UPDATE products SET stock_quantity=" + newCount + " WHERE item_id="+ answer.choice, function(err,data) {
-			console.log(data);
-			if (err) throw err;
+		if (err) throw err;
 		console.log("****************************************");
 		console.log("Inventory has been updated!");
 		console.log("****************************************");
